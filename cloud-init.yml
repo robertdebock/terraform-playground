@@ -1,0 +1,27 @@
+#cloud-config
+
+users:
+  - name: username
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    passwd: "$6$XW1iVscgtVUuEZeZ$XXiZROggD.K/OXfSX5UgmDAX6S7i1bA/sIbELm5Xry9dk9O03dge7V7LmcinUgntsp6NgKRe6Gnsml8fUMuca0"
+    lock_passwd: false
+
+packages:
+  - unzip
+  - azure-cli
+
+yum_repos:
+  azure-cli:
+    baseurl: "https://packages.microsoft.com/yumrepos/azure-cli"
+    name: azure-cli
+    enabled: true
+    gpgcheck: true
+    gpgkey: "https://packages.microsoft.com/keys/microsoft.asc"
+
+runcmd:
+  - curl https://releases.hashicorp.com/terraform/0.15.4/terraform_0.15.4_linux_amd64.zip -o terraform.zip
+  - unzip terraform.zip -d /usr/local/bin
+  - chmod 755 /usr/local/bin/terraform
+  - sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - systemctl restart sshd
