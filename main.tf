@@ -11,4 +11,17 @@ resource "digitalocean_droplet" "default" {
   size      = "s-1vcpu-1gb"
   ssh_keys  = [digitalocean_ssh_key.default.fingerprint]
   user_data = file("cloud-init.yml")
+
+  connection {
+    host     = self.ipv4_address
+    user     = "username"
+    password = "password"
+    timeout  = "10m"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo /usr/bin/cloud-init status --wait"
+    ]
+  }
 }
