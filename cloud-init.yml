@@ -10,6 +10,7 @@ users:
 packages:
   - unzip
   - azure-cli
+  - docker
 
 yum_repos:
   azure-cli:
@@ -24,4 +25,5 @@ runcmd:
   - unzip terraform.zip -d /usr/local/bin
   - chmod 755 /usr/local/bin/terraform
   - sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - systemctl --now enable docker
   - systemctl restart sshd
