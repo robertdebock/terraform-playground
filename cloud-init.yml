@@ -1,5 +1,7 @@
 #cloud-config
 
+package_upgrade: true
+
 users:
   - name: username
     shell: /bin/bash
@@ -8,9 +10,10 @@ users:
     lock_passwd: false
 
 packages:
-  - unzip
   - azure-cli
   - docker
+  - git
+  - unzip
 
 yum_repos:
   azure-cli:
