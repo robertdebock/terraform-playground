@@ -2,3 +2,5 @@ terraform.tfstate
 terraform.tfstate.backup
 ssh_keys/*
 .terraform*
+*.swp
+.terraform.lock.hcl
