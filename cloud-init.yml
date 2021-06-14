@@ -15,6 +15,7 @@ packages:
   - git
   - mysql
   - unzip
+  - wget
 
 yum_repos:
   azure-cli:
@@ -31,6 +32,6 @@ runcmd:
   - curl https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip -o terraform.zip
   - unzip terraform.zip -d /usr/local/bin
   - chmod 755 /usr/local/bin/terraform
-  - curl https://github.com/gruntwork-io/terragrunt/releases/download/v0.30.3/terragrunt_linux_amd64 -o terragrunt.zip
-  - unzip terragrunt.zip -d /usr/local/bin
+  - wget https://github.com/gruntwork-io/terragrunt/releases/download/v0.30.3/terragrunt_linux_amd64
+  - mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
   - chmod 755 /usr/local/bin/terragrunt
