@@ -8,20 +8,22 @@ resource "digitalocean_droplet" "default" {
   image     = "fedora-34-x64"
   name      = "terraform-${count.index}"
   region    = "ams3"
-  size      = "s-1vcpu-1gb"
+  size      = "1gb"
   ssh_keys  = [digitalocean_ssh_key.default.fingerprint]
   user_data = file("cloud-init.yml")
 
-  connection {
-    host     = self.ipv4_address
-    user     = "username"
-    password = "password"
-    timeout  = "10m"
-  }
+  # Disabled; the connection seems unpredictable.
+  # Using `private_key` does not seem to work at all.
+  # connection {
+  #   host = self.ipv4_address
+  #   user     = "username"
+  #   password = "password"
+  #   timeout  = "10m"
+  # }
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo /usr/bin/cloud-init status --wait"
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo /usr/bin/cloud-init status --wait"
+  #   ]
+  # }
 }

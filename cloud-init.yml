@@ -13,6 +13,7 @@ packages:
   - azure-cli
   - docker
   - git
+  - mysql
   - unzip
 
 yum_repos:
@@ -24,9 +25,12 @@ yum_repos:
     gpgkey: "https://packages.microsoft.com/keys/microsoft.asc"
 
 runcmd:
-  - curl https://releases.hashicorp.com/terraform/0.15.4/terraform_0.15.4_linux_amd64.zip -o terraform.zip
+  - curl https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip -o terraform.zip
   - unzip terraform.zip -d /usr/local/bin
   - chmod 755 /usr/local/bin/terraform
+  - curl https://github.com/gruntwork-io/terragrunt/releases/download/v0.30.3/terragrunt_linux_amd64 -o terragrunt.zip
+  - unzip terragrunt.zip -d /usr/local/bin
+  - chmod 755 /usr/local/bin/terragrunt
   - sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
   - systemctl --now enable docker
   - systemctl restart sshd
