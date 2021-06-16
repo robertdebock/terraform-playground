@@ -11,19 +11,4 @@ resource "digitalocean_droplet" "default" {
   size      = "1gb"
   ssh_keys  = [digitalocean_ssh_key.default.fingerprint]
   user_data = file("cloud-init.yml")
-
-  # Disabled; the connection seems unpredictable.
-  # Using `private_key` does not seem to work at all.
-  # connection {
-  #   host = self.ipv4_address
-  #   user     = "username"
-  #   password = "password"
-  #   timeout  = "10m"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "sudo /usr/bin/cloud-init status --wait"
-  #   ]
-  # }
 }

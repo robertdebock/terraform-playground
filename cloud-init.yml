@@ -13,6 +13,7 @@ packages:
   - azure-cli
   - docker
   - git
+  - graphviz
   - mysql
   - unzip
   - wget
