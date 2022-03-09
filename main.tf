@@ -5,10 +5,11 @@ resource "digitalocean_ssh_key" "default" {
 
 resource "digitalocean_droplet" "default" {
   count     = var.amount
-  image     = "fedora-34-x64"
+  image     = "fedora-35-x64"
   name      = "terraform-${count.index}"
   region    = "ams3"
   size      = "1gb"
   ssh_keys  = [digitalocean_ssh_key.default.fingerprint]
   user_data = file("cloud-init.yml")
+  tags      = []
 }
