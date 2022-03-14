@@ -13,7 +13,9 @@ packages:
   - azure-cli
   - docker
   - git
+  - google-cloud-cli
   - graphviz
+  - httpd
   - mysql
   - unzip
   - wget
@@ -25,6 +27,14 @@ yum_repos:
     enabled: true
     gpgcheck: true
     gpgkey: "https://packages.microsoft.com/keys/microsoft.asc"
+  google-cloud-cli:
+    baseurl: "https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64"
+    name: google-cloud-cli
+    enabled: true
+    gpgcheck: true
+    gpgkey:
+      - "https://packages.cloud.google.com/yum/doc/yum-key.gpg"
+      - "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
 
 runcmd:
   - sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
