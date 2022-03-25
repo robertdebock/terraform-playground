@@ -13,3 +13,20 @@ resource "digitalocean_droplet" "default" {
   user_data = file("cloud-init.yml")
   tags      = []
 }
+
+data "cloudflare_zones" "default" {
+  filter {
+    name = "robertdebock.nl"
+  }
+}
+
+resource "cloudflare_record" "default" {
+  count   = var.amount
+  zone_id = data.cloudflare_zones.default.zones[0].id
+  name    = "lab-${count.index}"
+  value   = digitalocean_droplet.default[count.index].ipv4_address
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+

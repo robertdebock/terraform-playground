@@ -49,3 +49,6 @@ runcmd:
   - curl https://releases.hashicorp.com/sentinel/0.18.7/sentinel_0.18.7_linux_amd64.zip -o sentinel.zip
   - unzip sentinel.zip -d /usr/local/bin
   - chmod 755 /usr/local/bin/sentinel
+  - wget https://github.com/tfutils/tfenv/archive/refs/tags/v2.2.3.zip
+  - unzip v2.2.3.zip -d /tmp/tfenv
+  - for dir in bin lib libexec share ; do mv -f /tmp/tfenv/tfenv-2.2.3/${dir}/* /usr/local/${dir} ; done
