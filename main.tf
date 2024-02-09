@@ -1,6 +1,10 @@
+# Make a TLS key for ssh.
+resource "tls_private_key" "default" {
+  algorithm = "RSA"
+}
 resource "digitalocean_ssh_key" "default" {
   name       = "terraform"
-  public_key = file("ssh_keys/id_rsa.pub")
+  public_key = tls_private_key.default.public_key_openssh
 }
 
 resource "digitalocean_droplet" "default" {
