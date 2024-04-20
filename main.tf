@@ -1,36 +1,36 @@
-# Make a TLS key for ssh.
-resource "tls_private_key" "default" {
-  algorithm = "RSA"
-}
-resource "digitalocean_ssh_key" "default" {
-  name       = "terraform"
-  public_key = tls_private_key.default.public_key_openssh
-}
-
-resource "digitalocean_droplet" "default" {
-  count     = var.amount
-  image     = "fedora-35-x64"
-  name      = "terraform-${count.index}"
-  region    = "ams3"
-  size      = "1gb"
-  ssh_keys  = [digitalocean_ssh_key.default.fingerprint]
-  user_data = file("cloud-init.yml")
-  tags      = []
-}
-
-data "cloudflare_zones" "default" {
-  filter {
-    name = "robertdebock.nl"
+# Read the prerequisites details.
+data "terraform_remote_state" "default" {
+  backend = "local"
+  config = {
+    path = "./prerequisites/terraform.tfstate"
   }
 }
 
-resource "cloudflare_record" "default" {
-  count   = var.amount
-  zone_id = data.cloudflare_zones.default.zones[0].id
-  name    = "lab-${count.index}"
-  value   = digitalocean_droplet.default[count.index].ipv4_address
-  type    = "A"
-  ttl     = 1
-  proxied = false
+# Make AWS servers.
+module "server" {
+  count                          = var.amount
+  source                         = "robertdebock/instance/aws"
+  version                        = "1.7.1"
+  instance_name                  = "lab-${count.index}"
+  instance_aws_key_pair_id       = data.terraform_remote_state.default.outputs.instance_key_pair_id
+  instance_aws_vpc_id            = data.terraform_remote_state.default.outputs.instance_vpc_id
+  instance_aws_subnet_id         = data.terraform_remote_state.default.outputs.instance_subnet_id
+  instance_aws_security_group_id = data.terraform_remote_state.default.outputs.instance_security_group_id
+  instance_user_data_script_file = "myscript.sh"
+  instance_root_block_device     = 32
 }
 
+# Lookup "adfinis.dev" on AWS.
+data "aws_route53_zone" "default" {
+  name = "adfinis.dev."
+}
+
+# Create A records.
+resource "aws_route53_record" "default" {
+  count   = var.amount
+  zone_id = data.aws_route53_zone.default.zone_id
+  name    = "lab-${count.index}"
+  type    = "A"
+  ttl     = "300"
+  records = [module.server[count.index].instance_public_ip]
+}

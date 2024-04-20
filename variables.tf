@@ -1,4 +1,4 @@
 variable "amount" {
   description = "(Optional) The number of instances."
-  default     = 1
+  default     = 6
 }
